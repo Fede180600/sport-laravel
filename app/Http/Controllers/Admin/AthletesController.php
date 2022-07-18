@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Athlete;
+use App\Category;
 use App\Http\Controllers\Controller;
+use App\Nation;
 use Illuminate\Http\Request;
 
 class AthletesController extends Controller
@@ -26,7 +28,9 @@ class AthletesController extends Controller
      */
     public function create()
     {
-        return view('admin.athletes.create');
+        $nationalities = Nation::all();
+        $categories = Category::all();
+        return view('admin.athletes.create', compact('nationalities', 'categories'));
     }
 
     /**
@@ -37,7 +41,15 @@ class AthletesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate($this->getValidationRules());
+        $data = $request->all();
+        $new_athlete = new Athlete();
+        $new_athlete->fill($data);
+        $new_athlete->save();
+
+        $new_athlete->categories()->sync($data['categories']);
+
+        return redirect()->route('admin.athletes.show', ['athlete' => $new_athlete->id]);
     }
 
     /**
@@ -48,7 +60,10 @@ class AthletesController extends Controller
      */
     public function show($id)
     {
-        //
+        $athlete = Athlete::findOrFail($id);
+        $athlete_nation = $athlete->nation;
+        $athlete_categories = $athlete->categories;
+        return view('admin.athletes.show', compact('athlete', 'athlete_nation', 'athlete_categories'));
     }
 
     /**
@@ -83,5 +98,13 @@ class AthletesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function getValidationRules() {
+        return [
+            'name' => 'required|max: 255',
+            'genere' => 'required',
+            'nation_id' => 'required'
+        ];
     }
 }
