@@ -24,3 +24,8 @@ Route::middleware('auth')
         Route::get('/', 'HomeController@index')->name('home');
         Route::resource('athletes', 'AthletesController');
     });
+
+    
+Route::get('{any?}', function() {
+    return view('guest.home');
+})->where('any', '.*');  
