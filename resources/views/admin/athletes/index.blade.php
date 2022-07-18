@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $atleta->name }}</h5>
                         <p class="card-text">{{ $atleta->genere }}</p>
-                        <a href="#" class="btn btn-primary">Vedi atleta</a>
+                        <a href="{{ route('admin.athletes.show', ['athlete' => $atleta->id]) }}" class="btn btn-primary">Vedi atleta</a>
                     </div>
                 </div>
             </div>

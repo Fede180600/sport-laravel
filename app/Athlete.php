@@ -13,4 +13,10 @@ class Athlete extends Model
     public function Categories() {
         return $this->belongsToMany('App\Category');
     }
+
+    protected $fillable = [
+        'name',
+        'genere',
+        'nation_id'
+    ];
 }
